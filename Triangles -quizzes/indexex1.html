@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Geometry Interactive Lesson</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root { --blue: #3A86FF; --coral: #FF006E; --yellow: #FFBE0B; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f9; padding: 20px; }
+        .container { max-width: 700px; margin: auto; }
+        .card { background: white; padding: 25px; margin-bottom: 30px; border-radius: 15px; border: 2px solid #333; box-shadow: 5px 5px 0px #333; }
+        .svg-container { display: flex; justify-content: center; margin: 20px 0; background: #fff; border: 1px solid #eee; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        button { padding: 12px; cursor: pointer; border: 2px solid #333; background: #fff; font-weight: bold; border-radius: 8px; transition: 0.2s; }
+        button:hover { background: var(--blue); color: white; }
+        .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: 600; border: 1px solid #333; }
+        .theorem { background: var(--yellow); padding: 10px; border-radius: 8px; font-weight: bold; border: 1px solid #333; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 style="text-align:center;">Interactive Geometry Exercises</h1>
+    <div id="app"></div>
+</div>
+
+<script>
+const exercises = [
+    {
+        svg: `<svg width="200" height="150" viewBox="0 0 200 150"><path d="M20 130 L180 130 L50 30 Z" fill="none" stroke="black" stroke-width="2"/><path d="M50 30 L50 130" stroke="black"/><rect x="50" y="110" width="20" height="20" fill="none" stroke="black"/><text x="60" y="55">1</text><text x="75" y="125">2</text></svg>`,
+        q: "Find the measure of ∠1 and ∠2.",
+        opt: ["A) ∠1=30°, ∠2=60°", "B) ∠1=60°, ∠2=30°", "C) ∠1=45°, ∠2=45°", "D) ∠1=90°, ∠2=30°"],
+        ans: 0,
+        th: "Triangle-Sum Theorem",
+        exp: "\\angle 1 = 180^\\circ - 90^\\circ - 60^\\circ = 30^\\circ, \\quad \\angle 2 = 180^\\circ - 90^\\circ - 30^\\circ = 60^\\circ"
+    },
+    {
+        svg: `<svg width="250" height="150" viewBox="0 0 250 150"><path d="M20 30 L120 75 L20 120 Z M230 30 L120 75 L230 120 Z" fill="none" stroke="black" stroke-width="2"/><text x="40" y="50">66°</text><text x="40" y="100">58°</text><text x="180" y="50">3</text><text x="180" y="100">50°</text><text x="90" y="70">1</text><text x="140" y="70">2</text></svg>`,
+        q: "Find ∠1, ∠2, and ∠3.",
+        opt: ["A) ∠1=56°, ∠2=56°, ∠3=74°", "B) ∠1=50°, ∠2=66°, ∠3=58°", "C) ∠1=66°, ∠2=50°, ∠3=58°", "D) ∠1=56°, ∠2=74°, ∠3=56°"],
+        ans: 0,
+        th: "Vertical Angles Theorem",
+        exp: "\\angle 1 = 180^\\circ - (66^\\circ+58^\\circ) = 56^\\circ, \\quad \\angle 2 = \\angle 1 = 56^\\circ, \\quad \\angle 3 = 180^\\circ - (56^\\circ+50^\\circ) = 74^\\circ"
+    },
+    {
+        svg: `<svg width="250" height="150" viewBox="0 0 250 150"><path d="M20 130 L125 40 L230 130 Z M20 130 L180 80 L125 40 Z" fill="none" stroke="black" stroke-width="2"/><text x="40" y="120">35°</text><text x="190" y="120">36°</text><text x="145" y="60">3</text><text x="100" y="90">1</text><text x="50" y="110">2</text></svg>`,
+        q: "Find ∠1, ∠2, and ∠3.",
+        opt: ["A) ∠1=65°, ∠2=65°, ∠3=79°", "B) ∠1=79°, ∠2=65°, ∠3=65°", "C) ∠1=109°, ∠2=65°, ∠3=79°", "D) ∠1=65°, ∠2=79°, ∠3=65°"],
+        ans: 1,
+        th: "Sum of Interior Angles",
+        exp: "\\angle 2 = 65^\\circ, \\quad \\angle 1 = 79^\\circ, \\quad \\angle 3 = 65^\\circ"
+    }
+];
+
+const app = document.getElementById('app');
+exercises.forEach((ex, i) => {
+    app.innerHTML += `
+        <div class="card">
+            <div class="theorem">📌 ${ex.th}</div>
+            <div class="svg-container">${ex.svg}</div>
+            <p>${ex.q}</p>
+            <div class="options">
+                ${ex.opt.map((o, j) => `<button onclick="check(${i}, ${j})">${o}</button>`).join('')}
+            </div>
+            <div id="fb-${i}" class="feedback"></div>
+        </div>`;
+});
+
+function check(qIdx, aIdx) {
+    const el = document.getElementById(`fb-${qIdx}`);
+    const correct = aIdx === exercises[qIdx].ans;
+    el.style.display = "block";
+    el.style.background = correct ? "#d4edda" : "#f8d7da";
+    el.innerHTML = `${correct ? "✔ Correct!" : "✖ Incorrect."} <br> Solution: \\(${exercises[qIdx].exp}\\)`;
+    MathJax.typeset();
+}
+</script>
+</body>
+</html>

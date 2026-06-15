@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة ألف التعليمية - عرض الدرس</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-orange: #ff9800;
+            --dark-blue: #1a252f;
+            --light-bg: #f8fafc;
+            --sidebar-width: 300px;
+            --step-active: #2196f3;
+            --step-completed: #00bcd4;
+            --success-green: #10b981;
+            --error-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            background-color: var(--light-bg);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Navbar --- */
+        .top-navbar {
+            background-color: var(--dark-blue); color: #ffffff; height: 55px; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10;
+        }
+        .lesson-title { font-weight: 700; color: #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .nav-buttons { display: flex; gap: 12px; }
+        .nav-action-btn {
+            background: transparent; border: 1px solid #475569; color: #f1f5f9;
+            padding: 6px 16px; border-radius: 6px; cursor: pointer; font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem; transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+        }
+        .nav-action-btn:hover { background-color: #334155; }
+        .back-home-btn {
+            background-color: var(--primary-orange); color: white; border: none; padding: 6px 16px;
+            border-radius: 6px; font-family: 'Tajawal', sans-serif; font-size: 0.9rem; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s;
+        }
+        .back-home-btn:hover { background-color: #e65100; }
+        .user-section-wrapper { display: flex; align-items: center; gap: 15px; }
+
+        .sub-navbar {
+            background-color: #FFFF00; border-bottom: 1px solid #e2e8f0;
+            height: 50px; display: flex; align-items: center; padding: 0 30px; gap: 35px;
+        }
+        .sub-nav-item { color: #64748b; font-weight: 500; cursor: pointer; padding: 13px 0; font-size: 0.95rem; position: relative; }
+        .sub-nav-item.active { color: var(--primary-orange); font-weight: 700; }
+        .sub-nav-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background-color: var(--primary-orange); }
+
+        /* --- Main Layout --- */
+        .main-container { display: flex; flex: 1; height: calc(100vh - 105px); }
+        .sidebar { width: var(--sidebar-width); background-color: #ffffff; border-left: 1px solid #e2e8f0; padding: 25px 20px; display: flex; flex-direction: column; box-sizing: border-box; }
+        .performance-title { font-size: 0.9rem; font-weight: 700; color: #475569; }
+        .progress-track { background-color: #f1f5f9; border-radius: 20px; height: 10px; margin: 8px 0; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, #ffb74d, var(--primary-orange)); height: 100%; width: 33%; transition: width 0.4s; }
+        .progress-details { font-size: 0.8rem; color: #94a3b8; margin-bottom: 30px; }
+
+        .menu-btn {
+            display: flex; align-items: center; justify-content: space-between; padding: 16px;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 12px;
+            cursor: pointer; transition: all 0.25s; font-family: 'Tajawal', sans-serif; color: #475569;
+        }
+        .menu-btn.active { background-color: #fff3e0; border-color: var(--primary-orange); color: #e65100; font-weight: 700; }
+        .menu-btn-content { display: flex; align-items: center; gap: 12px; }
+        .menu-btn i.main-icon { color: var(--primary-orange); }
+
+        .content-area { flex: 1; padding: 25px; overflow-y: auto; box-sizing: border-box; display: flex; justify-content: center; align-items: flex-start; }
+        .content-card { background-color: #ffffff; width: 100%; max-width: 1100px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03); padding: 35px; box-sizing: border-box; display: none; }
+        .content-card.active { display: block; }
+
+        /* --- Dynamic Components --- */
+        .hero-banner { display: flex; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-radius: 14px; overflow: hidden; margin-bottom: 35px; border: 1px solid #bae6fd; }
+        .hero-info { padding: 60px; flex: 1; }
+        .hero-info h1 { font-size: 3.2rem; margin: 0; color: #0369a1; font-weight: 800; line-height: 1.2; }
+        .hero-graphic { flex: 1; background: #e0f2fe; display: flex; align-items: center; justify-content: center; position: relative; min-height: 250px; }
+        
+        /* الأشكال الهندسية داخل الهيرو */
+        
+        
+        .action-start-btn { background-color: #059669; color: white; border: none; padding: 14px 45px; border-radius: 8px; font-family: 'Tajawal', sans-serif; font-size: 1.1rem; font-weight: 700; cursor: pointer; float: left; display: flex; align-items: center; gap: 10px; }
+
+        .lesson-stepper-container { display: none; flex-direction: column; gap: 20px; }
+        .lesson-stepper-container.active { display: flex; }
+        .steps-header-bar { display: flex; width: 100%; gap: 8px; margin-bottom: 15px; }
+        .step-pill { flex: 1; height: 12px; background-color: #e2e8f0; border-radius: 4px; transition: background-color 0.3s ease; }
+        .step-pill.completed { background-color: var(--step-completed); }
+        .step-pill.current { background-color: var(--step-active); }
+
+        .inner-slide { display: none; }
+        .inner-slide.active { display: block; animation: fadeIn 0.3s ease; }
+        .video-wrapper { position: relative; width: 100%; padding-bottom: 40%; height: 0; background-color: #000; border-radius: 10px; overflow: hidden; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        .interactive-box { background-color: #f8fafc; border: 1px dashed #cbd5e1; padding: 25px; border-radius: 12px; margin-top: 20px; }
+        .reveal-btn { background-color: #475569; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Tajawal', sans-serif; font-weight: bold; margin-left: 10px; }
+        .hint-btn { background-color: #0284c7; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Tajawal', sans-serif; font-weight: bold; }
+        
+        .panel-info { display: none; margin-top: 15px; padding: 15px; border-radius: 6px; }
+        .solution-panel { background-color: #ecfdf5; border-right: 4px solid #10b981; color: #065f46; }
+        .hint-panel { background-color: #f0f9ff; border-right: 4px solid #0284c7; color: #0369a1; }
+
+        .slide-footer-buttons { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 1px solid #f1f5f9; }
+        .inner-nav-btn { background-color: #f1f5f9; color: #475569; border: none; padding: 10px 24px; border-radius: 6px; font-family: 'Tajawal', sans-serif; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .inner-nav-btn:hover { background-color: #e2e8f0; }
+        .inner-nav-btn.primary { background-color: var(--step-active); color: white; }
+        .inner-nav-btn.primary:hover { background-color: #1976d2; }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .option-card { padding: 15px 20px; background-color: #ffffff; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 1.05rem; display: flex; align-items: center; gap: 15px; }
+        .option-card:hover { border-color: #cbd5e1; background-color: #f8fafc; }
+        .option-card.correct { border-color: var(--success-green); background-color: #ecfdf5; color: #065f46; font-weight: bold; }
+        .option-card.wrong { border-color: var(--error-red); background-color: #fef2f2; color: #991b1b; }
+        .feedback-message { display: none; margin-top: 20px; padding: 15px; border-radius: 8px; font-weight: bold; }
+        .feedback-message.success { display: block; background-color: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+        .feedback-message.danger { display: block; background-color: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+
+        .summary-card { background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border-right: 6px solid #0284c7; padding: 25px; border-radius: 8px; margin-top: 20px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="top-navbar">
+        <div class="lesson-title"><i class="fa fa-graduation-cap"></i> <span id="top-title-text">تحميل الدرس...</span></div>
+        <div class="nav-buttons">
+            <button class="nav-action-btn" onclick="globalPrev()"><i class="fa fa-arrow-right"></i> النشاط السابق</button>
+            <button class="nav-action-btn" onclick="globalNext()">النشاط التالي <i class="fa fa-arrow-left"></i></button>
+        </div>
+        <div class="user-section-wrapper">
+            <button class="back-home-btn" onclick="goToIndex10()"><i class="fa-solid fa-house"></i> الرئيسية</button>
+            <div class="user-profile"><span>AG</span><i class="fa fa-circle-user fa-lg"></i></div>
+        </div>
+    </div>
+
+    <div class="sub-navbar">
+        <div class="sub-nav-item active">تقديم</div>
+        <div class="sub-nav-item">محتوى إثرائي</div>
+        <div class="sub-nav-item">تحليلات</div>
+        <div class="sub-nav-item">الإعدادات الخاصة بالنشاط</div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="performance-title">معدل أداء الصف</div>
+            <div class="progress-track"><div class="progress-fill" id="sidebarBar"></div></div>
+            <div class="progress-details" id="progressText">متاح 22/22 - مكتمل 33%</div>
+
+            <button class="menu-btn active" id="menu-lesson" onclick="switchMainTab('lesson-hub', 33)">
+                <div class="menu-btn-content"><i class="fa-solid fa-graduation-cap main-icon"></i><span>الدرس (Lesson)</span></div>
+            </button>
+            <button class="menu-btn" id="menu-quiz" onclick="switchMainTab('quiz-hub', 66)">
+                <div class="menu-btn-content"><i class="fa-solid fa-trophy main-icon"></i><span>التحقق من الفهم</span></div>
+            </button>
+            <button class="menu-btn" id="menu-terms" onclick="switchMainTab('terms-hub', 100)">
+                <div class="menu-btn-content"><i class="fa-solid fa-language main-icon"></i><span>المصطلحات الأساسية</span></div>
+            </button>
+        </div>
+
+        <div class="content-area">
+            <div id="lesson-hub" class="content-card active" style="padding: 25px;">
+                
+                <div id="lesson-welcome-view">
+                    <div class="hero-banner">
+                        <div class="hero-info"><h1 id="hero-title-text">⚡</h1></div>
+                        <div class="hero-graphic" id="hero-shape-container"></div>
+                    </div>
+                    <button class="action-start-btn" onclick="startInsideLesson()">ابدأ الدرس (Start) <i class="fa fa-play"></i></button>
+                </div>
+
+                <div id="lesson-stepper-view" class="lesson-stepper-container">
+                    <div class="steps-header-bar" id="stepsHeaderBar">
+                        <div class="step-pill current"></div>
+                        <div class="step-pill"></div>
+                        <div class="step-pill"></div>
+                        <div class="step-pill"></div>
+                    </div>
+
+                    <div class="inner-slide active" id="slide-0">
+                        <h2>🎬 المحطة الأولى: الشرح المرئي الأساسي</h2>
+                        <p style="color: #FFFF00; margin-bottom: 20px;">شاهد هذا العرض البصري القصير لاستكشاف المفهوم الهندسي بذكاء.</p>
+                        <div class="video-wrapper">
+                            <iframe id="lesson-video" src="" allowfullscreen></iframe>
+                        </div>
+                        <div class="slide-footer-buttons">
+                            <button class="inner-nav-btn" onclick="globalPrev()" style="visibility: hidden;">السابق</button>
+                            <button class="inner-nav-btn primary" onclick="globalNext()">المحطة التالية ⬅️</button>
+                        </div>
+                    </div>
+
+                    <div class="inner-slide" id="slide-1">
+                        <h2>🔍 المحطة الثانية: استكشاف المفاهيم الهندسية التطبيقية</h2>
+                        <div class="interactive-box">
+                            <h4>📐 مسألة تطبيقية وعصف ذهني:</h4>
+                            <p id="prob-title-text">جاري التحميل...</p>
+                            <button class="hint-btn" onclick="showHint()">إظهار تلميح <i class="fa-solid fa-lightbulb"></i></button>
+                            <button class="reveal-btn" onclick="showSolution()">عرض الحل الكامل <i class="fa-solid fa-eye"></i></button>
+                            
+                            <div class="panel-info hint-panel" id="hintPanel"></div>
+                            <div class="panel-info solution-panel" id="solutionPanel"></div>
+                        </div>
+                        <div class="slide-footer-buttons">
+                            <button class="inner-nav-btn" onclick="globalPrev()">➡️ المحطة السابقة</button>
+                            <button class="inner-nav-btn primary" onclick="globalNext()">المحطة التالية ⬅️</button>
+                        </div>
+                    </div>
+
+                    <div class="inner-slide" id="slide-2">
+                        <h2>📝 المحطة الثالثة: تطبيق وتصحيح ذاتي فوري</h2>
+                        <div style="background-color: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                            <strong id="quiz-question-text">جاري التحميل...</strong>
+                            <div class="quiz-options" id="quiz-options-container"></div>
+                            <div id="quizFeedback" class="feedback-message"></div>
+                        </div>
+                        <div class="slide-footer-buttons">
+                            <button class="inner-nav-btn" onclick="globalPrev()">➡️ المحطة السابقة</button>
+                            <button class="inner-nav-btn primary" onclick="globalNext()">المحطة التالية ⬅️</button>
+                        </div>
+                    </div>
+
+                    <div class="inner-slide" id="slide-3">
+                        <h2>🏁 المحطة الرابعة: خلاصة الأفكار الذهبية</h2>
+                        <div class="summary-card">
+                            <h3 id="summary-title-text">📌 الخلاصة:</h3>
+                            <ul id="summary-list-container"></ul>
+                        </div>
+                        <div class="slide-footer-buttons">
+                            <button class="inner-nav-btn" onclick="globalPrev()">➡️ المحطة السابقة</button>
+                            <button class="inner-nav-btn primary" onclick="globalNext()">إنهاء الدرس والذهاب للاختبار 🏆</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quiz-hub" class="content-card">
+                <h2>التحقق من الفهم (Check My Understanding)</h2>
+                <p>تمارين ومسائل ختامية مخصصة لتقييم مخرجات التعلم لهذا الدرس بنجاح.</p>
+            </div>
+
+            <div id="terms-hub" class="content-card">
+                <h2>المصطلحات الأساسية (Key Terms)</h2>
+                <div id="terms-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="lessons-data.js"></script>
+    <script>
+        let isInsideLessonMode = false; 
+        let innerSlideIndex = 0;
+        const totalInnerSlides = 4;
+        let currentLessonData = null;
+
+        // 🟢 كود السحر الهندسي: قراءة الرابط وحقن المحتوى ديناميكياً
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const lessonKey = urlParams.get('lesson') || 'squares'; // الافتراضي مثلثات إذا لم يحدد
+            
+            currentLessonData = lessonsData[lessonKey];
+            
+            if (currentLessonData) {
+                // حقن العناوين والهيدر
+                document.getElementById('top-title-text').innerText = `${currentLessonData.id}. ${currentLessonData.titleEn}`;
+                document.getElementById('hero-title-text').innerHTML = `${currentLessonData.titleEn}<br><span style="font-size:1.8rem; font-weight:500; color:#555;">${currentLessonData.titleAr}</span>`;
+                document.getElementById('hero-shape-container').innerHTML = currentLessonData.badgeHtml;
+                document.getElementById('lesson-video').src = currentLessonData.videoUrl;
+                
+                // المحطة الثانية
+                document.getElementById('prob-title-text').innerText = currentLessonData.probTitle;
+                document.getElementById('hintPanel').innerText = currentLessonData.hint;
+                document.getElementById('solutionPanel').innerText = currentLessonData.solution;
+                
+                // المحطة الثالثة (الكويز)
+                document.getElementById('quiz-question-text').innerText = currentLessonData.quizQuestion;
+                const optionsContainer = document.getElementById('quiz-options-container');
+                optionsContainer.innerHTML = '';
+                currentLessonData.quizOptions.forEach(opt => {
+                    const div = document.createElement('div');
+                    div.className = 'option-card';
+                    div.innerText = opt.text;
+                    div.onclick = () => checkDynamicAnswer(div, opt.isCorrect);
+                    optionsContainer.appendChild(div);
+                });
+                
+                // المحطة الرابعة (الملخص)
+                document.getElementById('summary-title-text').innerText = currentLessonData.summaryTitle;
+                const listContainer = document.getElementById('summary-list-container');
+                listContainer.innerHTML = '';
+                currentLessonData.summaryItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = item;
+                    listContainer.appendChild(li);
+                });
+
+                // كارد المصطلحات الجانبي
+                const termsContainer = document.getElementById('terms-container');
+                let termsHtml = '<ul>';
+                currentLessonData.terms.forEach(t => {
+                    termsHtml += `<li><strong>${t.en}:</strong> ${t.ar}</li>`;
+                });
+                termsHtml += '</ul>';
+                termsContainer.innerHTML = termsHtml;
+            }
+        });
+
+        // دوال التنقل والتحكم الموحدة
+        function goToIndex10() { window.location.href = "index20.html"; }
+
+        function startInsideLesson() {
+            isInsideLessonMode = true;
+            document.getElementById('lesson-welcome-view').style.display = 'none';
+            document.getElementById('lesson-stepper-view').classList.add('active');
+            updateInnerStepperUI();
+        }
+
+        function updateInnerStepperUI() {
+            document.querySelectorAll('.inner-slide').forEach((slide, idx) => {
+                slide.classList.toggle('active', idx === innerSlideIndex);
+            });
+            const pills = document.getElementById('stepsHeaderBar').children;
+            for (let i = 0; i < pills.length; i++) {
+                pills[i].className = 'step-pill';
+                if (i < innerSlideIndex) pills[i].classList.add('completed');
+                else if (i === innerSlideIndex) pills[i].classList.add('current');
+            }
+        }
+
+        function showHint() { document.getElementById('hintPanel').style.display = 'block'; }
+        function showSolution() { document.getElementById('solutionPanel').style.display = 'block'; }
+
+        function checkDynamicAnswer(element, isCorrect) {
+            document.querySelectorAll('.option-card').forEach(card => card.className = 'option-card');
+            const feedback = document.getElementById('quizFeedback');
+            if(isCorrect) {
+                element.classList.add('correct');
+                feedback.className = "feedback-message success";
+                feedback.innerHTML = currentLessonData.quizSuccessMsg;
+            } else {
+                element.classList.add('wrong');
+                feedback.className = "feedback-message danger";
+                feedback.innerHTML = currentLessonData.quizFailMsg;
+            }
+        }
+
+        function globalNext() {
+            if (isInsideLessonMode) {
+                if (innerSlideIndex < totalInnerSlides - 1) {
+                    innerSlideIndex++; updateInnerStepperUI();
+                } else { switchMainTab('quiz-hub', 66); }
+            } else {
+                const currentActive = document.querySelector('.content-card.active').id;
+                if (currentActive === 'quiz-hub') switchMainTab('terms-hub', 100);
+            }
+        }
+
+        function globalPrev() {
+            if (isInsideLessonMode) {
+                if (innerSlideIndex > 0) {
+                    innerSlideIndex--; updateInnerStepperUI();
+                } else {
+                    isInsideLessonMode = false;
+                    document.getElementById('lesson-stepper-view').classList.remove('active');
+                    document.getElementById('lesson-welcome-view').style.display = 'block';
+                }
+            } else {
+                const currentActive = document.querySelector('.content-card.active').id;
+                if (currentActive === 'terms-hub') switchMainTab('quiz-hub', 66);
+                else if (currentActive === 'quiz-hub') {
+                    switchMainTab('lesson-hub', 33); startInsideLesson();
+                    innerSlideIndex = totalInnerSlides - 1; updateInnerStepperUI();
+                }
+            }
+        }
+
+        function switchMainTab(hubId, progressPercentage) {
+            isInsideLessonMode = (hubId === 'lesson-hub' && document.getElementById('lesson-stepper-view').classList.contains('active'));
+            document.querySelectorAll('.content-card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(hubId).classList.add('active');
+            
+            if (hubId === 'lesson-hub') document.getElementById('menu-lesson').classList.add('active');
+            if (hubId === 'quiz-hub') document.getElementById('menu-quiz').classList.add('active');
+            if (hubId === 'terms-hub') document.getElementById('menu-terms').classList.add('active');
+            
+            document.getElementById('sidebarBar').style.width = progressPercentage + '%';
+            document.getElementById('progressText').innerText = `متاح 22/22 - مكتمل ${progressPercentage}%`;
+        }
+    </script>
+</body>
+</html>

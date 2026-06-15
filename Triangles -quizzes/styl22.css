@@ -1,0 +1,11 @@
+.my-question-box {
+    display: flex;
+    flex-direction: column;
+    height: 80px;
+    width: 100%; /* اجعلها مرنة بدلاً من رقم ثابت */
+    color: rgb(72, 84, 101);
+    font-family: 'Signika', sans-serif;
+    font-size: 16px;
+    box-sizing: border-box;
+    /* يمكنك إضافة المزيد من الخصائص التي نسختها */
+}

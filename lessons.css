@@ -1,0 +1,40 @@
+/* تنسيق العنوان الرئيسي في المنتصف */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 40px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* تنسيق الحاوية لجعل الأزرار تترتب عمودياً ومتباعدة */
+.units {
+    display: flex;
+    flex-direction: column;   /* جعل الوحدات تحت بعضها */
+    align-items: center;       /* توسيط الأزرار في منتصف الشاشة */
+    gap: 20px;                 /* 💡 هذه هي المسافة السحرية المتباعدة بين كل وحدة والأخرى */
+    margin-top: 50px;
+}
+
+/* تنسيق الأزرار لجعل شكلها احترافي */
+.unit-btn {
+    display: block;
+    width: 80%;                /* تحديد عرض الأزرار ليتناسب مع شاشات الكمبيوتر والتابلت */
+    max-width: 400px;          /* الحد الأقصى لعرض الزر */
+    text-decoration: none;     /* إزالة الخط الأزرق المزعج تحت الكلام */
+    background-color: #007bff; /* لون خلفية أزرق جذاب للأزرار */
+    color: white;              /* لون النص أبيض ناصع */
+    padding: 15px 25px;        /* مساحة داخلية مريحة للزر */
+    border-radius: 10px;       /* جعل حواف الأزرار دائرية وناعمة */
+    text-align: center;        /* توسيط النص داخل الزر */
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* ظل خفيف يعطي عمقاً وتأثيراً ثلاثي الأبعاد */
+    transition: all 0.3s ease; /* حركة ناعمة عند التفاعل مع الزر */
+}
+
+/* تأثير رائع عند تمرير الماوس فوق الزر */
+.unit-btn:hover {
+    background-color: #0056b3; /* تغيير اللون لأزرق داكن قليلاً */
+    transform: translateY(-3px); /* رفع الزر قليلاً للأعلى لإعطاء إحساس بالتفاعل */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* زيادة الظل أثناء الوقوف بالماوس */
+}

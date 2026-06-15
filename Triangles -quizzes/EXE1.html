@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تمارين تفاعلية هندسية: نظرية مجموع زوايا المثلث</title>
+  
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #06b6d4;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --background-color: #f8fafc;
+      --text-color: #1e293b;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .header h1 { margin: 0; font-size: 28px; }
+    .header p { margin: 10px 0 0 0; opacity: 0.9; font-size: 16px; }
+
+    .rule-box {
+      background-color: #e0f2fe;
+      border-right: 6px solid #0284c7;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .question-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .question-title {
+      font-size: 19px;
+      font-weight: bold;
+      color: #1e293b;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .question-badge {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    /* حاوية الرسم الهندسي المحدثة لضمان الظهور الصريح */
+    .geometry-container {
+      display: block;
+      width: 100%;
+      max-width: 450px;
+      margin: 0 auto 25px auto;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .geometry-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .option-btn {
+      background: white;
+      border: 2px solid #cbd5e1;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .option-btn:hover {
+      border-color: var(--primary-color);
+      background-color: #f5f3ff;
+    }
+
+    .option-btn.correct {
+      background-color: #d1fae5 !important;
+      border-color: var(--success-color) !important;
+      color: #065f46 !important;
+    }
+
+    .option-btn.wrong {
+      background-color: #fee2e2 !important;
+      border-color: var(--danger-color) !important;
+      color: #991b1b !important;
+    }
+
+    .action-bar {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .explain-btn {
+      background-color: #64748b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .explanation-box {
+      display: none;
+      background-color: #f0fdf4;
+      border: 1px dashed var(--success-color);
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .explanation-box h4 { margin: 0 0 10px 0; color: #166534; font-size: 18px; }
+
+    .back-nav { margin-top: 35px; text-align: center; }
+    .back-nav a { color: var(--primary-color); text-decoration: none; font-weight: bold; font-size: 17px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <h1>منصة الرياضيات التفاعلية - الهيكل الوزاري</h1>
+      <p>الأشكال الهندسية والتمارين الذكية المتطابقة بالكامل | الصف العاشر العام</p>
+    </div>
+
+    <div class="rule-box">
+      📐 <strong>نظرية مجموع زوايا المثلث (Triangle-Sum Theorem):</strong> مجموع قياسات الزوايا الداخلية لأي مثلث يساوي دائماً $180^\circ$.
+    </div>
+
+    <div class="question-card" id="q1">
+      <div class="question-title">
+        <span class="question-badge">تمرين 1</span>
+        <span>اعتماداً على الشكل الهندسي أدناه، أوجد قياس الزاويتين المرقومتين $m\angle 1$ و $m\angle 2$:</span>
+      </div>
+
+      <div class="geometry-container">
+        <svg class="geometry-svg" viewBox="0 0 400 220" width="400" height="220" xmlns="http://www.w3.org/2000/svg">
+          <line x1="50" y1="180" x2="350" y2="180" stroke="#1e293b" stroke-width="3"/>
+          <line x1="50" y1="180" x2="150" y2="40" stroke="#1e293b" stroke-width="3"/>
+          <line x1="350" y1="180" x2="150" y2="40" stroke="#1e293b" stroke-width="3"/>
+          <line x1="150" y1="40" x2="150" y2="180" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="5,5"/>
+          <rect x="150" y="160" width="20" height="20" fill="none" stroke="#ef4444" stroke-width="2"/>
+          <text x="145" y="30" font-size="18" font-weight="bold" fill="#000">R</text>
+          <text x="30" y="195" font-size="18" font-weight="bold" fill="#000">T</text>
+          <text x="355" y="195" font-size="18" font-weight="bold" fill="#000">S</text>
+          <text x="150" y="205" font-size="16" font-weight="bold" fill="#ef4444">W</text>
+          <text x="75" y="170" font-size="16" font-weight="bold" fill="#1e293b">60°</text>
+          <text x="305" y="170" font-size="16" font-weight="bold" fill="#1e293b">30°</text>
+          <text x="115" y="85" font-size="18" font-weight="bold" fill="#d97706">1</text>
+          <text x="175" y="85" font-size="18" font-weight="bold" fill="#d97706">2</text>
+        </svg>
+      </div>
+
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp1')">$m\angle 1 = 40^\circ, \ m\angle 2 = 50^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'correct', 'exp1')">$m\angle 1 = 30^\circ, \ m\angle 2 = 60^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp1')">$m\angle 1 = 45^\circ, \ m\angle 2 = 45^\circ$</button>
+      </div>
+      <div class="action-bar">
+        <button class="explain-btn" onclick="toggleExplain('exp1')">شرح الإجابة بالتفصيل</button>
+      </div>
+      <div class="explanation-box" id="exp1">
+        <h4>📐 خطوات الحل المفصلة الخيالية:</h4>
+        1. <strong>المثلث الأيسر $\triangle RTW$:</strong> هو مثلث قائم الزاوية في $W$، أي أن زاوية الارتفاع تساوي $90^\circ$. المعطيات أعطتنا $\angle T = 60^\circ$.<br>
+        $$m\angle 1 = 180^\circ - (90^\circ + 60^\circ) = 180^\circ - 150^\circ = 30^\circ$$<br>
+        2. <strong>المثلث الأيمن $\triangle RWS$:</strong> قائم الزاوية أيضاً في $W$ ($90^\circ$). المعطيات أعطتنا $\angle S = 30^\circ$.<br>
+        $$m\angle 2 = 180^\circ - (90^\circ + 30^\circ) = 180^\circ - 120^\circ = 60^\circ$$
+      </div>
+    </div>
+
+    <div class="question-card" id="q2">
+      <div class="question-title">
+        <span class="question-badge">تمرين 2</span>
+        <span>اعتماداً على تقاطع المستقيمات والمثلثات عند النقطة $Q$، أوجد قياس $m\angle 1$:</span>
+      </div>
+
+      <div class="geometry-container">
+        <svg class="geometry-svg" viewBox="0 0 400 200" width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+          <line x1="50" y1="40" x2="350" y2="160" stroke="#1e293b" stroke-width="3"/>
+          <line x1="50" y1="160" x2="350" y2="40" stroke="#1e293b" stroke-width="3"/>
+          <line x1="50" y1="40" x2="50" y2="160" stroke="#1e293b" stroke-width="2.5"/>
+          <line x1="350" y1="40" x2="350" y2="160" stroke="#1e293b" stroke-width="2.5"/>
+          <text x="30" y="45" font-size="16" font-weight="bold" fill="#000">M</text>
+          <text x="30" y="170" font-size="16" font-weight="bold" fill="#000">P</text>
+          <text x="195" y="125" font-size="16" font-weight="bold" fill="#4f46e5">Q</text>
+          <text x="355" y="45" font-size="16" font-weight="bold" fill="#000">N</text>
+          <text x="355" y="170" font-size="16" font-weight="bold" fill="#000">O</text>
+          <text x="65" y="65" font-size="15" font-weight="bold" fill="#1e293b">66°</text>
+          <text x="65" y="145" font-size="15" font-weight="bold" fill="#1e293b">58°</text>
+          <text x="315" y="105" font-size="15" font-weight="bold" fill="#1e293b">50°</text>
+          <text x="160" y="105" font-size="16" font-weight="bold" fill="#d97706">1</text>
+          <text x="230" y="105" font-size="16" font-weight="bold" fill="#d97706">2</text>
+          <text x="320" y="65" font-size="16" font-weight="bold" fill="#d97706">3</text>
+        </svg>
+      </div>
+
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp2')">$m\angle 1 = 45^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp2')">$m\angle 1 = 62^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'correct', 'exp2')">$m\angle 1 = 56^\circ$</button>
+      </div>
+      <div class="action-bar">
+        <button class="explain-btn" onclick="toggleExplain('exp2')">شرح الإجابة بالتفصيل</button>
+      </div>
+      <div class="explanation-box" id="exp2">
+        <h4>📐 خطوات الحل المفصلة الخيالية:</h4>
+        نركز النظر في المثلث الأيسر المكتمل المعطيات وهو $\triangle MPQ$:<br>
+        الزوايا الداخلية المعلومة فيه هي زاوية $M = 66^\circ$ وزاوية $P = 58^\circ$. وبما أن مجموع قياسات زوايا المثلث يساوي $180^\circ$:<br>
+        $$m\angle 1 = 180^\circ - (66^\circ + 58^\circ)$$
+        $$m\angle 1 = 180^\circ - 124^\circ = 56^\circ$$
+      </div>
+    </div>
+
+    <div class="question-card" id="q3">
+      <div class="question-title">
+        <span class="question-badge">تمرين 3</span>
+        <span>في تقاطع المثلثات المتداخل، أوجد قياس الزاوية المرقومة $m\angle 1$:</span>
+      </div>
+
+      <div class="geometry-container">
+        <svg class="geometry-svg" viewBox="0 0 400 200" width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="200,30 80,170 320,170" fill="none" stroke="#1e293b" stroke-width="3"/>
+          <line x1="80" y1="170" x2="260" y2="90" stroke="#1e293b" stroke-width="2.5"/>
+          <line x1="320" y1="170" x2="140" y2="90" stroke="#1e293b" stroke-width="2.5"/>
+          <text x="195" y="25" font-size="16" font-weight="bold" fill="#000">R</text>
+          <text x="60" y="185" font-size="16" font-weight="bold" fill="#000">U</text>
+          <text x="325" y="185" font-size="16" font-weight="bold" fill="#000">T</text>
+          <text x="115" y="85" font-size="15" font-weight="bold" fill="#000">S</text>
+          <text x="270" y="85" font-size="15" font-weight="bold" fill="#000">V</text>
+          <text x="190" y="60" font-size="15" font-weight="bold" fill="#1e293b">80°</text>
+          <text x="105" y="160" font-size="15" font-weight="bold" fill="#1e293b">35°</text>
+          <text x="275" y="160" font-size="15" font-weight="bold" fill="#1e293b">36°</text>
+          <text x="195" y="130" font-size="18" font-weight="bold" fill="#ef4444">1</text>
+          <text x="155" y="155" font-size="15" font-weight="bold" fill="#d97706">2</text>
+          <text x="235" y="155" font-size="15" font-weight="bold" fill="#d97706">3</text>
+        </svg>
+      </div>
+
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(this, 'correct', 'exp3')">$m\angle 1 = 109^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp3')">$m\angle 1 = 95^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp3')">$m\angle 1 = 120^\circ$</button>
+      </div>
+      <div class="action-bar">
+        <button class="explain-btn" onclick="toggleExplain('exp3')">شرح الإجابة بالتفصيل</button>
+      </div>
+      <div class="explanation-box" id="exp3">
+        <h4>📐 خطوات الحل المفصلة الخيالية:</h4>
+        ننظر مباشرة إلى المثلث السفلي المتكون بالتقاطع وهو المثلث $\triangle QUT$:<br>
+        المعطيات على الرسم حددت لنا زوايا القاعدة بوضوح وهي: $35^\circ$ و $36^\circ$.<br>
+        بما أن مجموع قياسات زوايا المثلث يساوي $180^\circ$:<br>
+        $$m\angle 1 = 180^\circ - (35^\circ + 36^\circ)$$
+        $$m\angle 1 = 180^\circ - 71^\circ = 109^\circ$$
+      </div>
+    </div>
+
+    <div class="back-nav">
+      <a href="../index.html">⬅️ العودة إلى القائمة الرئيسية للمنصة</a>
+    </div>
+
+  </div>
+
+  <script>
+    function checkAnswer(button, status, explainId) {
+      const card = button.closest('.options-grid');
+      const buttons = card.querySelectorAll('.option-btn');
+      
+      buttons.forEach(btn => {
+        btn.classList.remove('correct', 'wrong');
+        btn.style.pointerEvents = 'none';
+      });
+
+      if (status === 'correct') {
+        button.classList.add('correct');
+      } else {
+        button.classList.add('wrong');
+        buttons.forEach(btn => {
+          if(btn.getAttribute('onclick').includes('correct')) {
+            btn.classList.add('correct');
+          }
+        });
+      }
+
+      document.getElementById(explainId).style.display = 'block';
+      if (typeof MathJax !== 'undefined') {
+        MathJax.typeset();
+      }
+    }
+
+    function toggleExplain(id) {
+      const box = document.getElementById(id);
+      if (box.style.display === 'block') {
+        box.style.display = 'none';
+      } else {
+        box.style.display = 'block';
+        if (typeof MathJax !== 'undefined') {
+          MathJax.typeset();
+        }
+      }
+    }
+  </script>
+</body>
+</html>

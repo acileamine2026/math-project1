@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Congruent Polygons Interactive</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root { --blue: #3A86FF; --coral: #FF006E; --yellow: #FFBE0B; --bg: #F8F9FA; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .card { background: white; padding: 30px; margin-bottom: 40px; border-radius: 20px; border: 3px solid #000; box-shadow: 10px 10px 0px #000; }
+        h1 { text-align: center; text-transform: uppercase; margin-bottom: 40px; }
+        .concept-box { background: var(--yellow); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; border: 2px solid #000; }
+        .options { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        button { padding: 15px; border: 2px solid #000; border-radius: 10px; cursor: pointer; font-weight: 700; background: #fff; transition: 0.3s; }
+        button:hover { background: var(--blue); color: white; transform: scale(1.02); }
+        .feedback { margin-top: 20px; padding: 20px; border-radius: 12px; display: none; font-size: 1.1rem; border: 2px solid #000; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Congruent Polygons Masterclass</h1>
+    <div id="app"></div>
+</div>
+
+<script>
+const exercises = [
+    {
+        id: 1,
+        title: "Identify Congruent Parts",
+        q: "If $\\triangle ABC \\cong \\triangle DEF$, which side corresponds to side AB?",
+        opt: ["A) DE", "B) EF", "C) DF", "D) AC"],
+        ans: 0,
+        concept: "Congruent Triangles: Corresponding sides are congruent based on vertex order.",
+        exp: "Since the congruence statement is $\\triangle ABC \\cong \\triangle DEF$, the first two letters 'AB' must correspond to the first two letters 'DE'."
+    },
+    {
+        id: 2,
+        title: "Polygon Congruence",
+        q: "Look at the pentagons ABCDE and FGHIJ. What is the measure of the angle corresponding to $\\angle A$?",
+        opt: ["A) $\\angle F$", "B) $\\angle G$", "C) $\\angle H$", "D) $\\angle I$"],
+        ans: 0,
+        concept: "Congruent Polygons: Matching vertices in order ensures corresponding angles are equal.",
+        exp: "Based on vertex ordering ABCDE $\\cong$ FGHIJ, the first vertex A corresponds to the first vertex F."
+    }
+];
+
+const app = document.getElementById('app');
+exercises.forEach((ex, i) => {
+    app.innerHTML += `
+        <div class="card">
+            <div class="concept-box">📌 ${ex.concept}</div>
+            <h3>Exercise ${ex.id}: ${ex.title}</h3>
+            <p>${ex.q}</p>
+            <div class="options">
+                ${ex.opt.map((o, j) => `<button onclick="check(${i}, ${j})">${o}</button>`).join('')}
+            </div>
+            <div id="fb-${i}" class="feedback"></div>
+        </div>`;
+});
+
+function check(qIdx, aIdx) {
+    const el = document.getElementById(`fb-${qIdx}`);
+    const correct = aIdx === exercises[qIdx].ans;
+    el.style.display = "block";
+    el.style.background = correct ? "#D4EDDA" : "#F8D7DA";
+    el.innerHTML = `<strong>${correct ? "✔ Correct!" : "✖ Incorrect."}</strong><br>Explanation: \\(${exercises[qIdx].exp}\\)`;
+    MathJax.typeset();
+}
+</script>
+</body>
+</html>

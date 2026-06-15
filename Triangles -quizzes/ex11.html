@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تمرين زوايا المثلث</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      width: 900px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .svg-box {
+      flex: 1;
+      min-width: 300px;
+      background: #f9fafb;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .form {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    input {
+      width: 80px;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .result {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .correct {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .wrong {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>📐 تمرين زوايا المثلث</h1>
+
+  <div class="container">
+
+    <!-- SVG SHAPE -->
+    <div class="svg-box">
+      <svg width="400" height="250" viewBox="0 0 400 250">
+        <path d="M50 200 L200 100 L20 200 Z" fill="none" stroke="black" stroke-width="2"/>
+        <text x="70" y="160" font-size="16">38°</text>
+
+        <path d="M200 100 L350 180 L200 220 Z" fill="none" stroke="black" stroke-width="2"/>
+
+        <text x="180" y="90" font-size="18">1</text>
+        <text x="210" y="115" font-size="18">2</text>
+        <text x="320" y="170" font-size="18">4</text>
+      </svg>
+    </div>
+
+    <!-- INPUTS -->
+    <div class="form">
+
+      <div class="row">
+        <label>m∠1 =</label>
+        <input id="a1" type="number">
+        <span>°</span>
+      </div>
+
+      <div class="row">
+        <label>m∠2 =</label>
+        <input id="a2" type="number">
+        <span>°</span>
+      </div>
+
+      <div class="row">
+        <label>m∠3 =</label>
+        <input id="a3" type="number">
+        <span>°</span>
+      </div>
+
+      <div class="row">
+        <label>m∠4 =</label>
+        <input id="a4" type="number">
+        <span>°</span>
+      </div>
+
+      <button onclick="checkAnswers()">تحقق من الحل</button>
+
+      <div id="result" class="result"></div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function checkAnswers() {
+    const correct = {
+      a1: 52,
+      a2: 128,
+      a3: 142,
+      a4: 38
+    };
+
+    const user = {
+      a1: Number(document.getElementById("a1").value),
+      a2: Number(document.getElementById("a2").value),
+      a3: Number(document.getElementById("a3").value),
+      a4: Number(document.getElementById("a4").value)
+    };
+
+    const isCorrect =
+      user.a1 === correct.a1 &&
+      user.a2 === correct.a2 &&
+      user.a3 === correct.a3 &&
+      user.a4 === correct.a4;
+
+    const result = document.getElementById("result");
+    result.style.display = "block";
+
+    if (isCorrect) {
+      result.className = "result correct";
+      result.innerText = "✔ ممتاز! جميع الإجابات صحيحة";
+    } else {
+      result.className = "result wrong";
+      result.innerText = "❌ هناك أخطاء، حاول مرة أخرى";
+    }
+  }
+</script>
+
+</body>
+</html>

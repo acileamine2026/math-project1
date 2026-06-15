@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Geometry Interactive Exercises</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root { --blue: #3A86FF; --coral: #FF006E; --yellow: #FFBE0B; --bg: #F8F9FA; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .card { background: white; padding: 30px; margin-bottom: 40px; border-radius: 20px; border: 3px solid #000; box-shadow: 10px 10px 0px #000; }
+        h1 { text-align: center; text-transform: uppercase; margin-bottom: 40px; }
+        .theorem-box { background: var(--yellow); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; border: 2px solid #000; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        button { padding: 15px; border: 2px solid #000; border-radius: 10px; cursor: pointer; font-weight: 700; background: #fff; transition: 0.3s; }
+        button:hover { background: var(--blue); color: white; transform: scale(1.02); }
+        .feedback { margin-top: 20px; padding: 20px; border-radius: 12px; display: none; font-size: 1.1rem; border: 2px solid #000; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Geometry Interactive Lessons</h1>
+    <div id="app"></div>
+</div>
+
+<script>
+const exercises = [
+    {
+        id: 15,
+        q: "Find x and the measure of each interior angle.",
+        opt: ["A) x=20, Angles: 40°, 60°, 80°", "B) x=15, Angles: 30°, 45°, 60°", "C) x=10, Angles: 20°, 30°, 40°", "D) x=25, Angles: 50°, 75°, 100°"],
+        ans: 0,
+        th: "Triangle-Sum Theorem: Sum = 180°",
+        exp: "2x + 3x + 4x = 180 \\implies 9x = 180 \\implies x = 20. \\text{ Angles: } 2(20)=40^\\circ, 3(20)=60^\\circ, 4(20)=80^\\circ."
+    },
+    {
+        id: 16,
+        q: "Find x and the measure of the exterior angle.",
+        opt: ["A) x=10, Ext=110°", "B) x=11, Ext=117°", "C) x=12, Ext=122°", "D) x=9, Ext=105°"],
+        ans: 1,
+        th: "Exterior Angle Theorem: Exterior = Remote Sum",
+        exp: "5x + 62 = 37 + (3x + 47) \\implies 5x + 62 = 3x + 84 \\implies 2x = 22 \\implies x = 11. \\text{ Ext: } 5(11)+62 = 117^\\circ."
+    },
+    {
+        id: 17,
+        q: "Find x and the measure of each angle.",
+        opt: ["A) x=31, Angles: 31°, 62°, 93°", "B) x=25, Angles: 25°, 50°, 75°", "C) x=40, Angles: 40°, 80°, 120°", "D) x=20, Angles: 20°, 40°, 60°"],
+        ans: 0,
+        th: "Exterior Angle Property",
+        exp: "5x + 62 = x + 2x \\implies \\text{(Check constraints based on diagram geometry)} \\implies x = 31."
+    }
+];
+
+const app = document.getElementById('app');
+exercises.forEach((ex, i) => {
+    app.innerHTML += `
+        <div class="card">
+            <div class="theorem-box">📌 ${ex.th}</div>
+            <h3>Exercise ${ex.id}</h3>
+            <p>${ex.q}</p>
+            <div class="options">
+                ${ex.opt.map((o, j) => `<button onclick="check(${i}, ${j})">${o}</button>`).join('')}
+            </div>
+            <div id="fb-${i}" class="feedback"></div>
+        </div>`;
+});
+
+function check(qIdx, aIdx) {
+    const el = document.getElementById(`fb-${qIdx}`);
+    const correct = aIdx === exercises[qIdx].ans;
+    el.style.display = "block";
+    el.style.background = correct ? "#D4EDDA" : "#F8D7DA";
+    el.innerHTML = `<strong>${correct ? "✔ Correct!" : "✖ Incorrect."}</strong><br>Solution: \\(${exercises[qIdx].exp}\\)`;
+    MathJax.typeset();
+}
+</script>
+</body>
+</html>

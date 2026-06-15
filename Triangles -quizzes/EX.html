@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تطبيق نظرية مجموع زوايا المثلث</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; border-right: 5px solid #3A86FF; }
+        h2 { color: #333; }
+        button { background: #3A86FF; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .result { margin-top: 15px; font-weight: bold; color: #d62828; }
+    </style>
+</head>
+<body>
+
+<h1>اختبار: نظرية مجموع زوايا المثلث</h1>
+<div id="quiz-container"></div>
+
+<script>
+const questions = [
+    {
+        q: "في الشكل 1: إذا كانت الزاوية $60^{\\circ}$ والزاوية القائمة $90^{\\circ}$، فما قياس الزاوية 1؟",
+        ans: "القياس = $180 - 90 - 60 = 30^{\\circ}$"
+    },
+    {
+        q: "في الشكل 2: إذا كانت الزوايا المتقابلة بالرأس متساوية، كيف نجد الزاوية 1؟",
+        ans: "القياس = $180 - 66 - 58 = 56^{\\circ}$"
+    }
+];
+
+const container = document.getElementById('quiz-container');
+questions.forEach((item, index) => {
+    container.innerHTML += `
+        <div class="card">
+            <p>${item.q}</p>
+            <button onclick="showAns(${index})">إظهار الحل</button>
+            <div id="ans-${index}" class="result" style="display:none;">${item.ans}</div>
+        </div>`;
+});
+
+function showAns(i) {
+    document.getElementById('ans-' + i).style.display = 'block';
+}
+</script>
+</body>
+</html>

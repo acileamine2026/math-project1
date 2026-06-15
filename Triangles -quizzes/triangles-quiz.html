@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تمارين تفاعلية: نظرية مجموع زوايا المثلث</title>
+  
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #06b6d4;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --background-color: #f8fafc;
+      --text-color: #1e293b;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .header p {
+      margin: 10px 0 0 0;
+      opacity: 0.9;
+      font-size: 16px;
+    }
+
+    .rule-box {
+      background-color: #e0f2fe;
+      border-right: 6px solid #0284c7;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .question-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      transition: transform 0.3s ease;
+    }
+
+    .question-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .question-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #334155;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .question-badge {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .geometry-desc {
+      background: #f1f5f9;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 15px;
+      margin-bottom: 15px;
+      color: #475569;
+      border-left: 4px solid #cbd5e1;
+      line-height: 1.6;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .option-btn {
+      background: white;
+      border: 2px solid #cbd5e1;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .option-btn:hover {
+      border-color: var(--primary-color);
+      background-color: #f5f3ff;
+    }
+
+    .option-btn.correct {
+      background-color: #d1fae5 !important;
+      border-color: var(--success-color) !important;
+      color: #065f46 !important;
+    }
+
+    .option-btn.wrong {
+      background-color: #fee2e2 !important;
+      border-color: var(--danger-color) !important;
+      color: #991b1b !important;
+    }
+
+    .action-bar {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .explain-btn {
+      background-color: #64748b;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .explain-btn:hover {
+      background-color: #475569;
+    }
+
+    .explanation-box {
+      display: none;
+      background-color: #f0fdf4;
+      border: 1px dashed var(--success-color);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .explanation-box h4 {
+      margin: 0 0 8px 0;
+      color: #166534;
+      font-size: 17px;
+    }
+
+    .back-nav {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .back-nav a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <h1>قسم التمارين التفاعلية والهيكل الوزاري</h1>
+      <p>الوحدة: العلاقات في المثلثات | الصف العاشر العام</p>
+    </div>
+
+    <div class="rule-box">
+      💡 <strong>نظرية مجموع زوايا المثلث (Triangle-Sum Theorem):</strong><br>
+      مجموع قياسات الزوايا الداخلية لأي مثلث يساوي دائماً $180^\circ$. أي أن:
+      $$m\angle A + m\angle B + m\angle C = 180^\circ$$
+    </div>
+
+    <div class="question-card" id="q1">
+      <div class="question-title">
+        <span class="question-badge">تمرين 1</span>
+        <span>أوجد قياس الزوايا المرقومة في الشكل أدناه:</span>
+      </div>
+      <div class="geometry-desc">
+        <strong>المعطيات من الرسم [cite: 5, 6]:</strong> لدينا مثلث قائم الزاوية في $W$ (أي أن $m\angle RWT = 90^\circ$) [cite: 13]، وقياس الزاوية $m\angle T = 60^\circ$ [cite: 9, 11]، وقياس الزاوية $m\angle S = 30^\circ$[cite: 10, 12].
+      </div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp1')">$m\angle 1 = 40^\circ, \ m\angle 2 = 50^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'correct', 'exp1')">$m\angle 1 = 30^\circ, \ m\angle 2 = 60^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp1')">$m\angle 1 = 45^\circ, \ m\angle 2 = 45^\circ$</button>
+      </div>
+      <div class="action-bar">
+        <button class="explain-btn" onclick="toggleExplain('exp1')">شرح الإجابة بالتفصيل</button>
+      </div>
+      <div class="explanation-box" id="exp1">
+        <h4>📐 خطوات الحل المفصلة:</h4>
+        1. <strong>لحساب $m\angle 1$:</strong> نشتغل في المثلث الأيسر $\triangle RTW$[cite: 7, 11, 13]. مجموع زواياه $180^\circ$[cite: 43]. لدينا زاوية قائمة $90^\circ$ وزاوية $60^\circ$[cite: 9].<br>
+        $$m\angle 1 = 180^\circ - (90^\circ + 60^\circ) = 180^\circ - 150^\circ = 30^\circ$$<br>
+        2. <strong>لحساب $m\angle 2$:</strong> نشتغل في المثلث الأيمن $\triangle RWS$[cite: 7, 12, 13]. مجموع زواياه $180^\circ$[cite: 43]. لدينا زاوية قائمة $90^\circ$ وزاوية $30^\circ$[cite: 10].<br>
+        $$m\angle 2 = 180^\circ - (90^\circ + 30^\circ) = 180^\circ - 120^\circ = 60^\circ$$
+      </div>
+    </div>
+
+    <div class="question-card" id="q2">
+      <div class="question-title">
+        <span class="question-badge">تمرين 2</span>
+        <span>اعتماداً على تقاطع المثلثات عند النقطة $Q$، أوجد قياس $m\angle 1$ أولاً[cite: 14, 21, 24]:</span>
+      </div>
+      <div class="geometry-desc">
+        <strong>المعطيات من الرسم [cite: 5, 14]:</strong> في المثلث الأيسر $\triangle MPQ$، الزوايا المعروفة هي $66^\circ$ و $58^\circ$[cite: 16, 20, 21, 23].
+      </div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp2')">$m\angle 1 = 45^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp2')">$m\angle 1 = 62^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'correct', 'exp2')">$m\angle 1 = 56^\circ$</button>
+      </div>
+      <div class="action-bar">
+        <button class="explain-btn" onclick="toggleExplain('exp2')">شرح الإجابة بالتفصيل</button>
+      </div>
+      <div class="explanation-box" id="exp2">
+        <h4>📐 خطوات الحل المفصلة:</h4>
+        بما أن مجموع زوايا المثلث $\triangle MPQ$ تساوي $180^\circ$[cite: 14, 21, 23, 43]:<br>
+        $$m\angle 1 = 180^\circ - (66^\circ + 58^\circ)$$
+        $$m\angle 1 = 180^\circ - 124^\circ = 56^\circ$$
+        * <em>ملاحظة إضافية للطلاب:</em> الزاوية $m\angle 2$ ستساوي أيضاً $56^\circ$ لأنها مقابلة بالرأس للزاوية $1$[cite: 18, 19, 21]!
+      </div>
+    </div>
+
+    <div class="question-card" id="q3">
+      <div class="question-title">
+        <span class="question-badge">تمرين 3</span>
+        <span>في الشكل المتقاطع، أوجد قياس الزاوية المركزية $m\angle 1$[cite: 25, 31]:</span>
+      </div>
+      <div class="geometry-desc">
+        <strong>المعطيات من الرسم [cite: 5, 25]:</strong> زوايا المثلث السفلي المجاورة للقاعدة $UT$ هي $35^\circ$ و $36^\circ$[cite: 32, 33, 34, 35].
+      </div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(this, 'correct', 'exp3')">$m\angle 1 = 109^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp3')">$m\angle 1 = 95^\circ$</button>
+        <button class="option-btn" onclick="checkAnswer(this, 'wrong', 'exp3')">$m\angle 1 = 120^\circ$</button>
+      </div>
+      <div class="action-bar">
+        <button class="explain-btn" onclick="toggleExplain('exp3')">شرح الإجابة بالتفصيل</button>
+      </div>
+      <div class="explanation-box" id="exp3">
+        <h4>📐 خطوات الحل المفصلة:</h4>
+        ننظر مباشرة إلى المثلث السفلي المتكون بالتقاطع وهو $\triangle UVT$[cite: 29, 34, 35]:<br>
+        الوزارة أعطتنا زوايا القاعدة فيه وهي $35^\circ$ و $36^\circ$[cite: 32, 33]. وبما أن مجموع زوايا أي مثلث هو $180^\circ$ [cite: 43]، فإن:<br>
+        $$m\angle 1 = 180^\circ - (35^\circ + 36^\circ)$$
+        $$m\angle 1 = 180^\circ - 71^\circ = 109^\circ$$
+      </div>
+    </div>
+
+    <div class="back-nav">
+      <a href="../index.html">⬅️ العودة إلى الصفحة الرئيسية للمنصة</a>
+    </div>
+
+  </div>
+
+  <script>
+    function checkAnswer(button, status, explainId) {
+      const card = button.closest('.options-grid');
+      const buttons = card.querySelectorAll('.option-btn');
+      
+      buttons.forEach(btn => {
+        btn.classList.remove('correct', 'wrong');
+        btn.style.pointerEvents = 'none';
+      });
+
+      if (status === 'correct') {
+        button.classList.add('correct');
+      } else {
+        button.classList.add('wrong');
+        buttons.forEach(btn => {
+          if(btn.getAttribute('onclick').includes('correct')) {
+            btn.classList.add('correct');
+          }
+        });
+      }
+
+      // إظهار الشرح تلقائياً
+      document.getElementById(explainId).style.display = 'block';
+      
+      // إعادة قراءة مكتبة MathJax للتأكد من تنسيق رموز الصندوق الذي ظهر حديثاً
+      if (typeof MathJax !== 'undefined') {
+        MathJax.typeset();
+      }
+    }
+
+    function toggleExplain(id) {
+      const box = document.getElementById(id);
+      if (box.style.display === 'block') {
+        box.style.display = 'none';
+      } else {
+        box.style.display = 'block';
+        if (typeof MathJax !== 'undefined') {
+          MathJax.typeset();
+        }
+      }
+    }
+  </script>
+</body>
+</html>
